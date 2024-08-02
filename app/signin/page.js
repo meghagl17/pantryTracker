@@ -1,34 +1,32 @@
 "use client";
-
 import { useState } from 'react';
 import { auth } from '../../firebase';
-import { useRouter } from 'next/navigation'; // Use next/navigation for app directory routing
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
 
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-
 import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export default function SignUp() {
+export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
+  const router = useRouter();  // Initialize useRouter from next/navigation
 
-  const handleSignUp = async (e) => { // Added e parameter
+  const handleSignIn = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('User signed up:', userCredential.user);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log('User signed in:', userCredential.user);
       router.push('/dashboard');  // Redirect to dashboard after sign-in
     } catch (error) {
-      console.error('Error signing up:', error.message);
+      console.error('Error signing in:', error.message);
     }
   };
 
@@ -50,9 +48,9 @@ export default function SignUp() {
             {/* <LockOutlinedIcon /> */}
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSignUp} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSignIn} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -85,7 +83,7 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Sign In
             </Button>
           </Box>
         </Box>
