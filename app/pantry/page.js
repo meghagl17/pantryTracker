@@ -37,7 +37,7 @@ export default function Home() {
     const [searchQuery, setSearchQuery] = useState(''); // stores what the user searched for
     const [filteredPantry, setFilteredPantry] = useState([]);  // stores the filtered list
 
-    const [clickedRequest, setClikedRequest] = useState({addItem: false, searchItem: false, getRecipe: false});
+    const [clickedRequest, setClikedRequest] = useState({addItem: false, searchItem: true, getRecipe: false});
 
     // Initially get the user
     useEffect(() => {
@@ -65,6 +65,7 @@ export default function Home() {
     }, [searchQuery, pantry]);
 
     const filterPantryItems = () => {
+        setClikedRequest({addItem: false, searchItem: true, getRecipe: false});
         const filtered = pantry.filter(item =>
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -242,6 +243,10 @@ export default function Home() {
         setClikedRequest({addItem: true, searchItem: false, getRecipe: false});
     }
 
+    const handleSearchItemClicked = async () => {
+        setClikedRequest({addItem: false, searchItem: true, getRecipe: false});
+    }
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
             <React.Fragment>
@@ -289,16 +294,38 @@ export default function Home() {
             </React.Fragment>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>
+                
+                {clickedRequest.searchItem ? (
+                    <>
+                    <TextField
+                        fullWidth
+                        label="Search your pantry"
+                        variant="outlined"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search items..."
+                        // style={{ marginBottom: '20px' }}
+                    />
+                    {/* <Button variant="contained" onClick={filterPantryItems}>
+                        Search Item
+                    </Button> */}
+                    </>
+                ) : (
+                    <Button variant="contained" onClick={handleSearchItemClicked}>
+                        Search Item
+                    </Button>
+                )}
+                
                 {clickedRequest.addItem ? (
                     <>
                     <TextField
-                    fullWidth
-                    id="item-name"
-                    label="Enter item name"
-                    variant="outlined"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    placeholder="Enter item name"
+                        fullWidth
+                        id="item-name"
+                        label="Enter item name"
+                        variant="outlined"
+                        value={itemName}
+                        onChange={(e) => setItemName(e.target.value)}
+                        placeholder="Enter item name"
                     />
                     <TextField
                         style={{ width: '150px' }}
@@ -318,17 +345,8 @@ export default function Home() {
                         Add Item
                     </Button>
                 )}
-            </div>
 
-            <TextField
-                fullWidth
-                label="Search your pantry"
-                variant="outlined"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search items..."
-                style={{ marginBottom: '20px' }}
-            />
+            </div>
 
             <Box
                 sx={{
