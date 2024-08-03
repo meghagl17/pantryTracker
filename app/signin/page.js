@@ -26,6 +26,7 @@ export default function SignIn() {
       console.log('User signed in:', userCredential.user);
       router.push('/dashboard');  // Redirect to dashboard after sign-in
     } catch (error) {
+      alert('Incorrect password');
       console.error('Error signing in:', error.message);
     }
   };

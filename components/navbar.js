@@ -76,7 +76,7 @@ export default function ButtonAppBar() {
                 textAlign: 'center',
                 transition: 'background-color 0.3s',
             }}>
-            Login
+            SignIn
           </Link>
           <Link
             href="/signup"

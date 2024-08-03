@@ -28,6 +28,7 @@ export default function SignUp() {
       console.log('User signed up:', userCredential.user);
       router.push('/dashboard');  // Redirect to dashboard after sign-in
     } catch (error) {
+      alert('This email already has an account, please signIn');
       console.error('Error signing up:', error.message);
     }
   };

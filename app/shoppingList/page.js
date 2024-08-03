@@ -153,33 +153,46 @@ export default function Home() {
                     maxWidth: '600px', // Set a max width to limit the width of the column
                 }}>
                     {shoppingList.map((item) => (
-                        <Card key={item.id} sx={{ width: 300, margin: 'auto', marginTop: '20px' }}>
-                        <CardContent>
-                          <Box display="flex" alignItems="center">
-                            <FormControlLabel
-                              control={<Checkbox onChange={() => addToDone(item.name, item.id)} />}
-                              labelPlacement="start"
-                              sx={{ marginRight: 2 }}
-                            />
-                            <Typography variant="h6">
-                              {item.name}
-                            </Typography>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    ))}
+                        <Card key={item.id} sx={{ 
+                            width: 300, 
+                            margin: 'auto', 
+                            marginTop: '20px', 
+                            boxShadow: '0px 4px 10px rgba(255, 0, 0, 0.5)' // Red shadow
+                            }}>
+                            <CardContent>
+                            <Box display="flex" alignItems="center">
+                                <FormControlLabel
+                                control={<Checkbox onChange={() => addToDone(item.name, item.id)} />}
+                                labelPlacement="start"
+                                sx={{ marginRight: 2 }}
+                                />
+                                <Typography variant="h6">
+                                {item.name}
+                                </Typography>
+                            </Box>
+                            </CardContent>
+                        </Card>
+                        ))}
 
                     <div>Done list</div>
                     {doneList.map((item) => (
-                        <Card key={item.id} sx={{ width: 300, margin: 'auto', marginTop: '20px' }}>
-                        <CardContent>
-                          <Box display="flex" alignItems="center">
-                            <Typography variant="h6">
-                              {item.name}
-                            </Typography>
-                          </Box>
-                        </CardContent>
-                      </Card>
+                        <Card 
+                            key={item.id} 
+                            sx={{ 
+                                width: 300, 
+                                margin: 'auto', 
+                                marginTop: '20px',
+                                boxShadow: '0px 4px 10px rgba(0, 100, 0, 0.5)'
+                            }}
+                        >
+                            <CardContent>
+                                <Box display="flex" alignItems="center">
+                                    <Typography variant="h6">
+                                        {item.name}
+                                    </Typography>
+                                </Box>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             </div>

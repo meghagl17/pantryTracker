@@ -84,7 +84,6 @@ export default function Home() {
         const itemDoc = await getDoc(itemDocRef);
         const currentQuantity = itemDoc.data().quantity;
         if(currentQuantity - 1 == 0){
-            alert('should I add this to your shopping cart?');
             setItemDelete({name: itemName, id: itemId})
             handleClickOpen();
             // open pop up
@@ -99,8 +98,13 @@ export default function Home() {
     }
 
     const handleAddItem = async () => {
-        if (itemName.trim() !== '' && itemQuantity.trim() !== '' ) {
-            await updateInventory(itemName, parseFloat(itemQuantity));
+        if (itemName.trim() !== '' && itemQuantity.trim() !== '') {
+            const quantity = parseFloat(itemQuantity);
+            if (isNaN(quantity)) {
+                alert('Quantity must be a valid number');
+                return;
+            }
+            await updateInventory(itemName, quantity);
             setItemName('');
             setItemQuantity('');
             handleGetItems();
@@ -166,11 +170,11 @@ export default function Home() {
                         aria-describedby="alert-dialog-description"
                     >
                         <DialogTitle id="alert-dialog-title">
-                        {"Use Google's location service?"}
+                        {"Shopping List Update"}
                         </DialogTitle>
                         <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            Since this item is not in your pantry anymore, do you want to add it to your shopping cart?
+                            Since this item is not in your pantry anymore, do you want to add it to your shopping list?
                         </DialogContentText>
                         </DialogContent>
                         <DialogActions>
