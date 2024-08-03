@@ -37,6 +37,8 @@ export default function Home() {
     const [searchQuery, setSearchQuery] = useState(''); // stores what the user searched for
     const [filteredPantry, setFilteredPantry] = useState([]);  // stores the filtered list
 
+    const [clickedRequest, setClikedRequest] = useState({addItem: false, searchItem: false, getRecipe: false});
+
     // Initially get the user
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -92,6 +94,7 @@ export default function Home() {
 
     // Adding a new item to the inventory
     const handleAddItem = async () => {
+        setClikedRequest({addItem: false, searchItem: false, getRecipe: false});
         if (itemName.trim() !== '' && itemQuantity.trim() !== '') {
             const quantity = parseFloat(itemQuantity);
             if (isNaN(quantity)) {
@@ -235,12 +238,14 @@ export default function Home() {
         setOpen(false);
     };
 
+    const handleAddItemClicked = async () => {
+        setClikedRequest({addItem: true, searchItem: false, getRecipe: false});
+    }
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
             <React.Fragment>
-                <Dialog
-                    open={open}
-                >
+                <Dialog open={open}>
                     <DialogTitle id="alert-dialog-title">
                     {"Shopping List Update"}
                     </DialogTitle>
@@ -264,9 +269,6 @@ export default function Home() {
                         Update {itemToUpdate.name} Quantity
                     </DialogTitle>
                     <DialogContent>
-                    {/* <DialogContentText id="alert-dialog-description">
-                        Item: {itemToUpdate.name}
-                    </DialogContentText> */}
                     <TextField
                         style={{ width: '150px' }}
                         id="item-quantity"
@@ -287,7 +289,9 @@ export default function Home() {
             </React.Fragment>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>
-                <TextField
+                {clickedRequest.addItem ? (
+                    <>
+                    <TextField
                     fullWidth
                     id="item-name"
                     label="Enter item name"
@@ -295,19 +299,25 @@ export default function Home() {
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}
                     placeholder="Enter item name"
-                />
-                <TextField
-                    style={{ width: '150px' }}
-                    id="item-quantity"
-                    label="Quantity"
-                    variant="outlined"
-                    value={itemQuantity}
-                    onChange={(e) => setItemQuantity(e.target.value)}
-                    placeholder="Quantity"
-                />
-                <Button variant="contained" onClick={handleAddItem}>
-                    Add Item
-                </Button>
+                    />
+                    <TextField
+                        style={{ width: '150px' }}
+                        id="item-quantity"
+                        label="Quantity"
+                        variant="outlined"
+                        value={itemQuantity}
+                        onChange={(e) => setItemQuantity(e.target.value)}
+                        placeholder="Quantity"
+                    />
+                    <Button variant="contained" onClick={handleAddItem}>
+                        Add Item
+                    </Button>
+                    </>
+                ) : (
+                    <Button variant="contained" onClick={handleAddItemClicked}>
+                        Add Item
+                    </Button>
+                )}
             </div>
 
             <TextField
