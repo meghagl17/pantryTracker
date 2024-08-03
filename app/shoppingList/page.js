@@ -17,8 +17,20 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Checkbox from '@mui/material/Checkbox';
 import { FormControlLabel } from '@mui/material'
 
+import * as React from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+
 
 import { collection, addDoc, getDocs, query, updateDoc, getDoc, doc, deleteDoc} from 'firebase/firestore';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function Home() {
     const [shoppingList, setShoppingList] = useState([]);
@@ -28,6 +40,12 @@ export default function Home() {
     const [user, setUser] = useState('');
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -117,6 +135,25 @@ export default function Home() {
         handleGetItems();
         console.log(`Item ${itemName} added to Done`);
     }
+
+    const DeleteDoneItems = async () => {
+        if (!user) return; 
+        const userId = user.uid;
+        const doneCollectionRef = collection(db, 'users', userId, 'done');
+        const querySnapshot = await getDocs(doneCollectionRef);
+        const deletePromises = querySnapshot.docs.map(docSnapshot => {
+            return deleteDoc(doc(db, 'users', userId, 'done', docSnapshot.id));
+        });
+        await Promise.all(deletePromises);
+        handleGetItems();
+    }
+
+    const handleClose = (deleteItems) => {
+        if(deleteItems){
+            DeleteDoneItems();
+        }
+        setOpen(false);
+    };
     
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
@@ -196,6 +233,40 @@ export default function Home() {
                     ))}
                 </div>
             </div>
+            <React.Fragment>
+                <Button
+                variant="contained"
+                onClick={handleClickOpen}
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    zIndex: 1000, // Ensures the button is above other elements
+                }}
+                >
+                Done Shopping?
+                </Button>
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle>{"Delete DONE items?"}</DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        !This action will delete all the items that you have shopped!
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={() => handleClose(false)}>NO</Button>
+                    <Button onClick={() => handleClose(true)} autoFocus>
+                        YES
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
         </div>
     );
 }
