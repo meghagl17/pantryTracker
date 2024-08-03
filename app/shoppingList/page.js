@@ -153,7 +153,7 @@ export default function Home() {
                     maxWidth: '600px', // Set a max width to limit the width of the column
                 }}>
                     {shoppingList.map((item) => (
-                        <Card sx={{ width: 300, margin: 'auto', marginTop: '20px' }}>
+                        <Card key={item.id} sx={{ width: 300, margin: 'auto', marginTop: '20px' }}>
                         <CardContent>
                           <Box display="flex" alignItems="center">
                             <FormControlLabel
@@ -171,7 +171,7 @@ export default function Home() {
 
                     <div>Done list</div>
                     {doneList.map((item) => (
-                        <Card sx={{ width: 300, margin: 'auto', marginTop: '20px' }}>
+                        <Card key={item.id} sx={{ width: 300, margin: 'auto', marginTop: '20px' }}>
                         <CardContent>
                           <Box display="flex" alignItems="center">
                             <Typography variant="h6">
