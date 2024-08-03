@@ -25,7 +25,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 
-
 import { collection, addDoc, getDocs, query, updateDoc, getDoc, doc, deleteDoc} from 'firebase/firestore';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -256,7 +255,7 @@ export default function Home() {
                     <DialogTitle>{"Delete DONE items?"}</DialogTitle>
                     <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        !This action will delete all the items that you have shopped!
+                        This action will delete all the items that you have shopped
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>

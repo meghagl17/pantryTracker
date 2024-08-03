@@ -211,14 +211,22 @@ export default function Home() {
                 </Button>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '20px',
-                marginTop: '20px',
-                width: '100%',
-                maxWidth: '1200px'
-            }}>
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(1, 1fr)', // Default to 1 column
+                    gap: '20px',
+                    marginTop: '20px',
+                    width: '100%',
+                    maxWidth: '1200px',
+                    '@media (min-width: 600px)': {
+                        gridTemplateColumns: 'repeat(2, 1fr)' // 3 columns on larger screens
+                    },
+                    '@media (min-width: 890px)': {
+                        gridTemplateColumns: 'repeat(3, 1fr)' // 3 columns on larger screens
+                    }
+                }}
+            >
                 {pantry.map((item) => (
                     <Card key={item.id} sx={{ minWidth: 275, maxWidth: 400 }}>
                         <CardContent>
@@ -235,13 +243,13 @@ export default function Home() {
                                 Update Item
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <AddIcon onClick={() => addToInventory(item.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
                                 <RemoveIcon onClick={() => removeFromInventory(item.id, item.name)} style={{ cursor: 'pointer' }} />
+                                <AddIcon onClick={() => addToInventory(item.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
                             </Box>
                         </Box>
                     </Card>
                 ))}
-            </div>
+            </Box>
         </div>
     );
 }
