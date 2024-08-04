@@ -311,7 +311,7 @@ export default function Home() {
                     </Button> */}
                     </>
                 ) : (
-                    <Button variant="contained" onClick={handleSearchItemClicked}>
+                    <Button sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}} onClick={handleSearchItemClicked}>
                         Search Item
                     </Button>
                 )}
@@ -336,12 +336,13 @@ export default function Home() {
                         onChange={(e) => setItemQuantity(e.target.value)}
                         placeholder="Quantity"
                     />
-                    <Button variant="contained" onClick={handleAddItem}>
+                    <Button sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}} onClick={handleAddItem}>
                         Add Item
                     </Button>
                     </>
                 ) : (
-                    <Button variant="contained" onClick={handleAddItemClicked}>
+                    <Button sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}} 
+                        onClick={handleAddItemClicked}>
                         Add Item
                     </Button>
                 )}
@@ -366,7 +367,7 @@ export default function Home() {
             >
                 {filteredPantry.length === 0 ?
                     (pantry.map((item) => (
-                        <Card key={item.id} sx={{ minWidth: 275, maxWidth: 400 }}>
+                        <Card key={item.id} sx={{ backgroundColor: '#F5F5DC !important', minWidth: 275, maxWidth: 400 }}>
                             <CardContent>
                                 <Typography variant="h5" component="div">
                                     {item.name}
@@ -377,9 +378,20 @@ export default function Home() {
                             </CardContent>
                             <Divider />
                             <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                {/* <Typography gutterBottom variant="body2"> */}
-                                <Button onClick = {() => handleClickOpenForUpdate(item.id, item.name)}>Update Item</Button>
-                                {/* </Typography> */}
+                                <Button 
+                                    variant="contained" 
+                                    sx={{ 
+                                        backgroundColor: '#FFF8E1', // Custom background
+                                        color: '#3f4f22', // Custom text color
+                                        '&:hover': {
+                                        backgroundColor: '#E0E0E0', // Custom hover color
+                                        }
+                                    }}
+                                    onClick={() => handleClickOpenForUpdate(item.id, item.name)}
+                                    >
+                                    Update Item
+                                </Button>
+
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <RemoveIcon onClick={() => removeFromInventory(item.id, item.name)} style={{ cursor: 'pointer' }} />
                                     <AddIcon onClick={() => addToInventory(item.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />

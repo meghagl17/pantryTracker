@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       {/* <Navbar /> */}
       {/* <body className={inter.className}>{children}</body> */}
-      <body className={inter.className}>
+      <body className={`${inter.className}`} style={{ backgroundColor: '#e3ecd4' }}>
           <div className="mx-36 text-2xl">
             <ButtonAppBar />
             <div className="flex flex-col items-center text-center mt-6">
@@ -25,3 +25,13 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+// Primary: Green (#4CAF50) - Represents freshness and health.
+// Secondary: Beige (#F5F5DC) - Neutral and warm, complementing the green.
+// Accent: Orange (#FF9800) - Adds a touch of energy and highlights important actions.
+// Background: Soft White (#FAFAFA) - Clean and minimalistic.
+
+// Primary: Warm Brown (#8D6E63) - Gives a rustic, cozy feel.
+// Secondary: Olive Green (#A9A19A) - Complements the brown with an organic feel.
+// Accent: Soft Yellow (#FFD54F) - Adds warmth and highlights calls to action.
+// Background: Cream (#FFF8E1) - Soft and welcoming.
