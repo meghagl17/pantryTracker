@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
-    color: 'inherit',
+    color: '#3f4f22',
     display: 'block',
 }));
 
@@ -29,6 +29,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         height: '150px', // Smaller height for smaller screens
     },
+    backgroundColor: '#ffffd9'
 }));
 
 const CenteredContent = styled(CardContent)(({ theme }) => ({
@@ -50,8 +51,8 @@ export default function Home() {
             <StyledLink href="/pantry">
                 <StyledCard>
                     <CenteredContent>
-                        <Typography variant="h5">Pantry</Typography>
-                        <Typography variant="body2">Keep track of your pantry items</Typography>
+                        <Typography variant="h5" sx={{color: '#3f4f22'}}>Pantry</Typography>
+                        <Typography variant="body2" sx={{color: '#3f4f22'}}>Keep track of your pantry items</Typography>
                     </CenteredContent>
                 </StyledCard>
             </StyledLink>
@@ -59,8 +60,8 @@ export default function Home() {
             <StyledLink href="/shoppingList">
                 <StyledCard>
                     <CenteredContent>
-                        <Typography variant="h5">Shopping List</Typography>
-                        <Typography variant="body2">Keep track of your shopping list</Typography>
+                        <Typography variant="h5" sx={{color: '#3f4f22'}}>Shopping List</Typography>
+                        <Typography variant="body2"sx={{color: '#3f4f22'}}>Keep track of your shopping list</Typography>
                     </CenteredContent>
                 </StyledCard>
             </StyledLink>

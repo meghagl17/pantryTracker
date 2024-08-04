@@ -24,6 +24,26 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
+import { styled } from '@mui/system';
+
+const CustomCard = styled(Card)(({ theme }) => ({
+    backgroundColor: '#ffffe5',
+    minWidth: 275,
+    maxWidth: 400,
+    '& .MuiCardContent-root': {
+        backgroundColor: '#ffffe5'
+    }
+}));
+
+const CustomButton = styled(Button)(({ theme }) => ({
+    color: '#3f4f22',
+    backgroundColor: 'rgba(126, 158, 69, 0.2)', /* 50% opacity */
+    '&:hover': {
+        backgroundColor: '#7e9e45',
+        color: 'white',
+    },
+}));
+
 export default function Home() {
     const [pantry, setPantry] = useState([]);     // all the items in the pantry
     const [itemName, setItemName] = useState('');     // new item to add
@@ -260,10 +280,10 @@ export default function Home() {
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={() => handleClose(itemDelete, false)}>NO</Button>
-                    <Button onClick={() => handleClose(itemDelete, true)} autoFocus>
+                    <CustomButton onClick={() => handleClose(itemDelete, false)}>NO</CustomButton>
+                    <CustomButton onClick={() => handleClose(itemDelete, true)} autoFocus>
                         YES
-                    </Button>
+                    </CustomButton>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
@@ -285,10 +305,10 @@ export default function Home() {
                     />
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={() => handleCloseForUpdate(false)}>Cancel</Button>
-                    <Button onClick={() => handleCloseForUpdate(true)} autoFocus>
+                    <CustomButton onClick={() => handleCloseForUpdate(false)}>Cancel</CustomButton>
+                    <CustomButton onClick={() => handleCloseForUpdate(true)} autoFocus>
                         Update
-                    </Button>
+                    </CustomButton>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
@@ -367,8 +387,8 @@ export default function Home() {
             >
                 {filteredPantry.length === 0 ?
                     (pantry.map((item) => (
-                        <Card key={item.id} sx={{ backgroundColor: '#F5F5DC !important', minWidth: 275, maxWidth: 400 }}>
-                            <CardContent>
+                        <CustomCard key={item.id}>
+                            <CardContent sx={{ backgroundColor: '#fffff4'}}>
                                 <Typography variant="h5" component="div">
                                     {item.name}
                                 </Typography>
@@ -378,29 +398,18 @@ export default function Home() {
                             </CardContent>
                             <Divider />
                             <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Button 
-                                    variant="contained" 
-                                    sx={{ 
-                                        backgroundColor: '#FFF8E1', // Custom background
-                                        color: '#3f4f22', // Custom text color
-                                        '&:hover': {
-                                        backgroundColor: '#E0E0E0', // Custom hover color
-                                        }
-                                    }}
-                                    onClick={() => handleClickOpenForUpdate(item.id, item.name)}
-                                    >
-                                    Update Item
-                                </Button>
-
+                            <CustomButton onClick={() => handleClickOpenForUpdate(item.id, item.name)}>
+                                Update Item
+                            </CustomButton>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <RemoveIcon onClick={() => removeFromInventory(item.id, item.name)} style={{ cursor: 'pointer' }} />
                                     <AddIcon onClick={() => addToInventory(item.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
                                 </Box>
                             </Box>
-                        </Card>
+                        </CustomCard>
                     ))) : 
                     (filteredPantry.map((item) => (
-                        <Card key={item.id} sx={{ minWidth: 275, maxWidth: 400 }}>
+                        <CustomCard key={item.id}>
                             <CardContent>
                                 <Typography variant="h5" component="div">
                                     {item.name}
@@ -411,15 +420,15 @@ export default function Home() {
                             </CardContent>
                             <Divider />
                             <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                {/* <Typography gutterBottom variant="body2"> */}
-                                <Button onClick = {() => handleClickOpenForUpdate(item.id, item.name)}>Update Item</Button>
-                                {/* </Typography> */}
+                                <CustomButton onClick={() => handleClickOpenForUpdate(item.id, item.name)}>
+                                    Update Item
+                                </CustomButton>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <RemoveIcon onClick={() => removeFromInventory(item.id, item.name)} style={{ cursor: 'pointer' }} />
                                     <AddIcon onClick={() => addToInventory(item.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
                                 </Box>
                             </Box>
-                        </Card>
+                        </CustomCard>
                     )))}
             </Box>
         </div>
