@@ -142,7 +142,6 @@ export default function Home() {
             addedAt: new Date(),
             quantity: itemQuantity,
         });
-        console.log(`Item ${itemName} added to pantry`);
     }
 
     // Add +1 to an item
@@ -240,12 +239,18 @@ export default function Home() {
         if (!user) return; 
         const userId = user.uid;
         if(addtoShoppingCart){
-            const shoppingCartCollectionRef = collection(db, 'users', userId, 'shoppingList');
-            await addDoc(shoppingCartCollectionRef, {
+            // const shoppingCartCollectionRef = collection(db, 'users', userId, 'shoppingList');
+            // await addDoc(shoppingCartCollectionRef, {
+            //     name: itemDelete.name,
+            //     addedAt: new Date(),
+            // });
+            // console.log(`Item ${itemDelete.name} added to pantry`);
+            const generalListCollectionRef = collection(db, 'users', userId, 'generalList');
+            const docRef = await addDoc(generalListCollectionRef, {
                 name: itemDelete.name,
                 addedAt: new Date(),
             });
-            console.log(`Item ${itemDelete.name} added to pantry`);
+            console.log('Store created successfully');
         }
         //delete item
         try {
@@ -369,35 +374,37 @@ export default function Home() {
 
             </div>
 
-            <div style={{alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>{pantry.length === 0 && loading === false ? (
-  <Box 
-    sx={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      width: '100%', // Full width of the container
-      backgroundColor: '#f5f5f5', 
-      textAlign: 'center'
-    }}
-  >
-    <Typography 
-      variant="h6" 
-      sx={{ 
-        color: '#7e9e45', 
-        fontWeight: 'bold', 
-        padding: '20px', 
-        backgroundColor: '#ffffff', 
-        borderRadius: '10px', 
-        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        maxWidth: '600px', // Limit the width to avoid overly wide content
-        width: '100%', // Ensure it uses full width up to the maxWidth
-        margin: '0 auto' // Center horizontally
-      }}
-    >
-      🛒 Your pantry is currently empty. Start adding items to keep track of your stock!
-    </Typography>
-  </Box>
-) : null}</div>
+            <div style={{alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>
+                {pantry.length === 0 && loading === false ? (
+                    <Box 
+                        sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        alignItems: 'center', 
+                        width: '100%', // Full width of the container
+                        backgroundColor: '#f5f5f5', 
+                        textAlign: 'center'
+                        }}
+                    >
+                        <Typography 
+                            variant="h6" 
+                            sx={{ 
+                                color: '#7e9e45', 
+                                fontWeight: 'bold', 
+                                padding: '20px', 
+                                backgroundColor: '#ffffff', 
+                                borderRadius: '10px', 
+                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                                maxWidth: '600px', // Limit the width to avoid overly wide content
+                                width: '100%', // Ensure it uses full width up to the maxWidth
+                                margin: '0 auto' // Center horizontally
+                            }}
+                        >
+                            🛒 Your pantry is currently empty. Start adding items to keep track of your stock!
+                        </Typography>
+                    </Box>
+                ) : null}
+            </div>
 
             <Box
                 sx={{
@@ -416,22 +423,22 @@ export default function Home() {
                 }}
             >
 
-{loading ? (
-            <Box 
-                sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'center', 
-                    alignItems: 'center', 
-                    height: '100vh', 
-                    width: '100%',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                }}
-            >
-                <CircularProgress size={60} sx={{ color: 'white' }} />
-            </Box>
-        ) : (null)}
+                {loading ? (
+                    <Box 
+                        sx={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center', 
+                            height: '100vh', 
+                            width: '100%',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                        }}
+                    >
+                        <CircularProgress size={60} sx={{ color: 'white' }} />
+                    </Box>
+                ) : (null)}
 
                 {filteredPantry.length === 0 ?
                     (pantry.map((item) => (

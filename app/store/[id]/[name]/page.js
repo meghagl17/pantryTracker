@@ -1,5 +1,5 @@
 "use client"
-import { auth, db } from '../../firebase';
+import { auth, db } from '../../../../firebase';
 import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -27,15 +27,10 @@ import Slide from '@mui/material/Slide';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-
 import { styled } from '@mui/system';
 
 import { collection, addDoc, getDocs, query, updateDoc, getDoc, doc, deleteDoc} from 'firebase/firestore';
+import { useParams } from 'next/navigation'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -51,48 +46,29 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 export default function Home() {
+
+    const params = useParams();
+    const [param, setParam] = useState({id: '', name: ''});
+
     const [shoppingList, setShoppingList] = useState([]);
+    const [doneList, setDoneList] = useState([]);
     const [itemName, setItemName] = useState('');
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState('');
+
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
     const [open, setOpen] = React.useState(false);
 
-    const [stores, setStores] = useState([]);
-    const [selectedValues, setSelectedValues] = useState({});
-
-    const handleChange = async (event, itemId, itemName) => {
-        if (!user) return; 
-        const userId = user.uid;
-
-        const selectedValue = JSON.parse(event.target.value);
-
-        setSelectedValues(prevState => ({
-          ...prevState,
-          [itemId]: selectedValue
-        }));
-        console.log(selectedValue);
-
-        // delete item from general List
-        // add item to selectedValue.id 
-        const storesCollectionRef = collection(db, 'users', userId, 'stores', selectedValue.id);
-        await addDoc(storesCollectionRef, {
-            name: itemName,
-        });
-
-        try {
-            const generalListDocRef = doc(db, 'users', userId, 'generalList', itemId);
-            await deleteDoc(generalListDocRef);
-            console.log(`Item ${itemId} deleted successfully`);
-          } catch (error) {
-            console.error('Error deleting item:', error.message);
-        }
+    const handleClickOpen = () => {
+        setOpen(true);
     };
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 setUser(user);
+                setParam({id: params.id, name: params.name})
                 setLoading(false);
             } else {
                 setLoading(true);
@@ -111,12 +87,12 @@ export default function Home() {
     const updateInventory = async (itemName) => {
         if (!user) return; 
         const userId = user.uid;
-        const pantryCollectionRef = collection(db, 'users', userId, 'generalList');
-        await addDoc(pantryCollectionRef, {
+        const shoppingListCollectionRef = collection(db, 'users', userId, 'store', param.id, 'shoppingList');
+        await addDoc(shoppingListCollectionRef, {
             name: itemName,
             addedAt: new Date(),
         });
-        console.log(`Item ${itemName} added to pantry`);
+        console.log(`Item ${itemName} added to shoppingList`);
     }
 
     const handleAddItem = async () => {
@@ -128,14 +104,13 @@ export default function Home() {
             alert('Please provide item name');
             console.error('Please provide item name');
         }
-        console.log(stores);
     };
 
     const handleGetItems = async () => {
         setLoading(true);
         if (!user) return;
         const userId = user.uid;
-        const shoppingListCollectionRef = collection(db, 'users', userId, 'generalList');
+        const shoppingListCollectionRef = collection(db, 'users', userId, 'store', param.id, 'shoppingList');
         const q = query(shoppingListCollectionRef);
         const querySnapshot = await getDocs(q);
 
@@ -143,66 +118,60 @@ export default function Home() {
             id: doc.id,
             ...doc.data()
         }));
-        setShoppingList(items);
 
-        const storesCollectionRef = collection(db, 'users', userId, 'stores');
-        const q2 = query(storesCollectionRef);
+        setShoppingList(items);
+        console.log("shopping List items:", items);
+
+        const doneCollectionRef = collection(db, 'users', userId, 'store', param.id, 'done');
+        const q2 = query(doneCollectionRef);
         const querySnapshot2 = await getDocs(q2);
 
         const items2 = querySnapshot2.docs.map((doc) => ({
-            id: doc.id, name: doc.data().name
+            id: doc.id,
+            ...doc.data()
         }));
-        setStores(items2);
 
-        setSelectedValues(prevValues => {
-            const newValues = { ...prevValues };
-            items.forEach(item => {
-              if (!(item.id in newValues)) {
-                newValues[item.id] = ''; // Default value or previous value
-              }
-            });
-            return newValues;
-          });
-
+        setDoneList(items2);
         setLoading(false);
+        console.log("Done List items:", items2);
     };
 
-    // const addToDone = async (itemName, itemId) => {
-    //     if (!user) return; 
-    //     const userId = user.uid;
-    //     const doneCollectionRef = collection(db, 'users', userId, 'done');
-    //     await addDoc(doneCollectionRef, {
-    //         name: itemName,
-    //     });
+    const addToDone = async (itemName, itemId) => {
+        if (!user) return; 
+        const userId = user.uid;
+        const doneCollectionRef = collection(db, 'users', userId,'store', param.id, 'done');
+        await addDoc(doneCollectionRef, {
+            name: itemName,
+        });
 
-    //     try {
-    //         const itemDocRef = doc(db, 'users', userId, 'shoppingList', itemId);
-    //         await deleteDoc(itemDocRef);
-    //         console.log(`Item ${itemId} deleted successfully`);
-    //       } catch (error) {
-    //         console.error('Error deleting item:', error.message);
-    //     }
+        try {
+            const itemDocRef = doc(db, 'users', userId, 'store', param.id, 'shoppingList', itemId);
+            await deleteDoc(itemDocRef);
+            console.log(`Item ${itemId} deleted successfully`);
+          } catch (error) {
+            console.error('Error deleting item:', error.message);
+        }
 
-    //     handleGetItems();
-    //     console.log(`Item ${itemName} added to Done`);
-    // }
+        handleGetItems();
+        console.log(`Item ${itemName} added to Done`);
+    }
 
-    // const DeleteDoneItems = async () => {
-    //     if (!user) return; 
-    //     const userId = user.uid;
-    //     const doneCollectionRef = collection(db, 'users', userId, 'done');
-    //     const querySnapshot = await getDocs(doneCollectionRef);
-    //     const deletePromises = querySnapshot.docs.map(docSnapshot => {
-    //         return deleteDoc(doc(db, 'users', userId, 'done', docSnapshot.id));
-    //     });
-    //     await Promise.all(deletePromises);
-    //     handleGetItems();
-    // }
+    const DeleteDoneItems = async () => {
+        if (!user) return; 
+        const userId = user.uid;
+        const doneCollectionRef = collection(db, 'users', userId, 'store', param.id, 'done');
+        const querySnapshot = await getDocs(doneCollectionRef);
+        const deletePromises = querySnapshot.docs.map(docSnapshot => {
+            return deleteDoc(doc(db, 'users', userId, 'store', param.id, 'done', docSnapshot.id));
+        });
+        await Promise.all(deletePromises);
+        handleGetItems();
+    }
 
     const handleClose = (deleteItems) => {
-        // if(deleteItems){
-        //     DeleteDoneItems();
-        // }
+        if(deleteItems){
+            DeleteDoneItems();
+        }
         setOpen(false);
     };
     
@@ -328,40 +297,111 @@ export default function Home() {
                             margin: 'auto', 
                             marginTop: '20px', 
                             boxShadow: '0px 4px 10px rgba(255, 0, 0, 0.5)' // Red shadow
-                        }}>
+                            }}>
                             <CardContent>
                             <Box display="flex" alignItems="center">
+                                <FormControlLabel
+                                control={<Checkbox onChange={() => addToDone(item.name, item.id)} />}
+                                labelPlacement="start"
+                                sx={{ marginRight: 2 }}
+                                />
                                 <Typography variant="h6">
                                 {item.name}
                                 </Typography>
-                                <div>
-                                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                    <InputLabel id={`select-label-${item.id}`}>Age</InputLabel>
-                                    <Select
-                                    labelId={`select-label-${item.id}`}
-                                    id={`select-${item.id}`}
-                                    value={selectedValues[item.id] || ''}
-                                    label="Age"
-                                    onChange={(event) => handleChange(event, item.id, item.name)}
-                                    >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {stores.map((store) => (
-                                        <MenuItem key={store.id} value={JSON.stringify({id: store.id, name: store.name})}>
-                                        {store.name}
-                                        </MenuItem>
-                                    ))}
-                                    </Select>
-                                    <FormHelperText>With label + helper text</FormHelperText>
-                                </FormControl>
-                                </div>
                             </Box>
+                            </CardContent>
+                        </Card>
+                        ))}
+
+{!loading && doneList.length != 0 ? <Box 
+    sx={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      gap: 1, // Space between text and icon
+      margin: '20px 0', // Add margin for spacing
+      backgroundColor: '#e8f5e9', // Background color
+      padding: '10px', // Padding around the content
+      borderRadius: '8px', // Rounded corners
+      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' // Subtle shadow
+    }}
+  >
+    <Typography 
+      variant="h4"
+      sx={{ 
+        color: '#3f4f22', // Custom color
+        fontWeight: 'bold',
+        textAlign: 'center', 
+        textTransform: 'uppercase',
+        letterSpacing: '0.1em',
+        fontSize: '2rem' // Increase the font size
+      }}
+    >
+      Done List
+    </Typography>
+    <ArrowDownwardIcon 
+      sx={{ 
+        color: '#3f4f22', // Match the text color
+        fontSize: '2rem' // Match the font size
+      }} 
+    />
+  </Box> : (null)}
+                    {doneList.map((item) => (
+                        <Card 
+                            key={item.id} 
+                            sx={{ 
+                                width: 300, 
+                                margin: 'auto', 
+                                marginTop: '20px',
+                                boxShadow: '0px 4px 10px rgba(0, 100, 0, 0.5)'
+                            }}
+                        >
+                            <CardContent>
+                                <Box display="flex" alignItems="center">
+                                    <Typography variant="h6">
+                                        {item.name}
+                                    </Typography>
+                                </Box>
                             </CardContent>
                         </Card>
                     ))}
                 </div>
             </div>
+            <React.Fragment>
+                <Button
+                variant="contained"
+                onClick={handleClickOpen}
+                sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}}
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    zIndex: 1000, // Ensures the button is above other elements
+                }}
+                >
+                Done Shopping?
+                </Button>
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle>{"Delete DONE items?"}</DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        This action will delete all the items that you have shopped
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <CustomButton onClick={() => handleClose(false)}>NO</CustomButton>
+                    <CustomButton onClick={() => handleClose(true)} autoFocus>
+                        YES
+                    </CustomButton>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
         </div>
     );
 }
