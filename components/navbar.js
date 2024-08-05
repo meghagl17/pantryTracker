@@ -9,14 +9,14 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
-
-// import MenuIcon from '@mui/icons-material/Menu';
-// import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
+import Image from "next/image";
+import logo from '../public/favicon.ico'
 import Link from 'next/link'
 
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 
+import HomeIcon from '@mui/icons-material/Home';
 
 export default function ButtonAppBar() {
   const router = useRouter();  // Initialize useRouter from next/navigation
@@ -47,7 +47,7 @@ export default function ButtonAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: '#7e9e45'}}>
+      <AppBar position="static" sx={{ backgroundColor: '#7e9e45' }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -58,43 +58,80 @@ export default function ButtonAppBar() {
           >
             {/* <MenuIcon /> */}
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <div style={{ 
+            position: 'relative', 
+            width: '70px', // Set the desired width
+            height: '70px', // Set the desired height
+            overflow: 'hidden', // Hide overflow to crop
+          }}>
+            <Image
+              src={logo}
+              alt="Pantrify Logo"
+              layout="fill" // Use fill layout to cover the container
+              objectFit="cover" // Cover the container while maintaining aspect ratio
+              style={{
+                position: 'absolute', // Absolute positioning within the container
+                top: '50%', // Center vertically
+                left: '50%', // Center horizontally
+                transform: 'translate(-65%, -30%) scale(2)', // Center and zoom in
+              }}
+            />
+          </div>
+          <Typography 
+            variant="h6" 
+            component="div" 
+            sx={{ 
+              flexGrow: 1,
+              fontFamily: 'Gistesy, sans-serif', // Apply Gistesy font
+              fontStyle: 'italic', // Make the text cursive
+            }}
+          >
             Pantrify
           </Typography>
-          {/* <Button color="inherit">Login</Button> */}
-          {!user ? <><Link
-            href="/signin"
-            style={{
-                display: 'inline-block',
-                padding: '12px 24px',
-                fontSize: '18px',
-                fontWeight: '600',
-                color: '#fff',
-                backgroundColor: '#007bff',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                textAlign: 'center',
-                transition: 'background-color 0.3s',
-            }}>
-            SignIn
-          </Link>
-          <Link
-            href="/signup"
-            style={{
-                display: 'inline-block',
-                padding: '12px 24px',
-                marginLeft: '5px', 
-                fontSize: '18px',
-                fontWeight: '600',
-                color: '#fff',
-                backgroundColor: '#007bff',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                textAlign: 'center',
-                transition: 'background-color 0.3s',
-            }}>
-            SignUp
-          </Link></> : 
+          {!user ? (
+            <>
+              <Link href="/signin">
+                <Button 
+                  variant="contained" 
+                  sx={{ 
+                    backgroundColor: '#3f4f22', 
+                    '&:hover': { backgroundColor: '#2e3b1a' }, 
+                    color: 'white', 
+                    marginRight: '7px',
+                    fontFamily: 'Gistesy, sans-serif' // Apply Gistesy font
+                  }}
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button 
+                  variant="contained" 
+                  sx={{ 
+                    backgroundColor: '#3f4f22', 
+                    '&:hover': { backgroundColor: '#2e3b1a' }, 
+                    color: 'white',
+                    fontFamily: 'Gistesy, sans-serif' // Apply Gistesy font
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard">
+                <HomeIcon 
+                  sx={{
+                    fontSize: '2rem',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    '&:active': {
+                      color: '#ccc',
+                    },
+                  }} 
+                />
+              </Link>
               <Button
                 color="inherit"
                 onClick={handleLogout}
@@ -105,10 +142,13 @@ export default function ButtonAppBar() {
                   '&:hover': {
                     backgroundColor: '#2e3b1a',
                   },
+                  fontFamily: 'Gistesy, sans-serif' // Apply Gistesy font
                 }}
               >
                 Logout
-              </Button>}
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

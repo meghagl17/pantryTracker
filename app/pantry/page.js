@@ -23,6 +23,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { styled } from '@mui/system';
 
@@ -64,9 +65,6 @@ export default function Home() {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 setUser(user);
-                setLoading(false);
-            } else {
-                setLoading(false);
             }
         });
     
@@ -98,6 +96,7 @@ export default function Home() {
 
     // Get all the items in the pantry for the user
     const handleGetItems = async () => {
+        setLoading(true);
         if (!user) return;
         const userId = user.uid;
         const pantryCollectionRef = collection(db, 'users', userId, 'pantry');
@@ -110,12 +109,12 @@ export default function Home() {
         }));
 
         setPantry(items);
+        setLoading(false);
         console.log("Pantry items:", items);
     };
 
     // Adding a new item to the inventory
     const handleAddItem = async () => {
-        setClikedRequest({addItem: false, searchItem: false, getRecipe: false});
         if (itemName.trim() !== '' && itemQuantity.trim() !== '') {
             const quantity = parseFloat(itemQuantity);
             if (isNaN(quantity)) {
@@ -126,6 +125,7 @@ export default function Home() {
             setItemName('');
             setItemQuantity('');
             handleGetItems();
+            setClikedRequest({addItem: false, searchItem: false, getRecipe: false});
         } else {
             alert('Please provide item name and quantity');
             console.error('Please provide item name and quantity');
@@ -369,6 +369,36 @@ export default function Home() {
 
             </div>
 
+            <div style={{alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>{pantry.length === 0 && loading === false ? (
+  <Box 
+    sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      width: '100%', // Full width of the container
+      backgroundColor: '#f5f5f5', 
+      textAlign: 'center'
+    }}
+  >
+    <Typography 
+      variant="h6" 
+      sx={{ 
+        color: '#7e9e45', 
+        fontWeight: 'bold', 
+        padding: '20px', 
+        backgroundColor: '#ffffff', 
+        borderRadius: '10px', 
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        maxWidth: '600px', // Limit the width to avoid overly wide content
+        width: '100%', // Ensure it uses full width up to the maxWidth
+        margin: '0 auto' // Center horizontally
+      }}
+    >
+      🛒 Your pantry is currently empty. Start adding items to keep track of your stock!
+    </Typography>
+  </Box>
+) : null}</div>
+
             <Box
                 sx={{
                     display: 'grid',
@@ -385,6 +415,24 @@ export default function Home() {
                     }
                 }}
             >
+
+{loading ? (
+            <Box 
+                sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    height: '100vh', 
+                    width: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                }}
+            >
+                <CircularProgress size={60} sx={{ color: 'white' }} />
+            </Box>
+        ) : (null)}
+
                 {filteredPantry.length === 0 ?
                     (pantry.map((item) => (
                         <CustomCard key={item.id}>

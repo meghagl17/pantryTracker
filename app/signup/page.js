@@ -47,26 +47,35 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: '3f4f22' }}>
             {/* <LockOutlinedIcon /> */}
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
           <Box component="form" onSubmit={handleSignUp} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Email" 
-            />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            placeholder="Email"
+            sx={{
+              '& label': { color: '#3f4f22' }, // Label color
+              '& input': { color: '#3f4f22' }, // Input text color
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#3f4f22' }, // Outline color
+                '&:hover fieldset': { borderColor: '#3f4f22' }, // Outline color on hover
+                '&.Mui-focused fieldset': { borderColor: '#3f4f22' } // Outline color when focused
+              }
+            }}
+          />
             <TextField
               margin="normal"
               required
@@ -79,12 +88,32 @@ export default function SignUp() {
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               placeholder="Password" 
+              sx={{
+                '& label': { color: '#3f4f22' }, // Label color
+                '& input': { color: '#3f4f22' }, // Input text color
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#3f4f22' }, // Outline color
+                  '&:hover fieldset': { borderColor: '#3f4f22' }, // Outline color on hover
+                  '&.Mui-focused fieldset': { borderColor: '#3f4f22' } // Outline color when focused
+                }
+              }}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                backgroundColor: '#3f4f22',
+                color: 'white', // or whatever text color you want
+                mt: 3,
+                mb: 2,
+                '&:hover': {
+                  backgroundColor: '#3f4f22', // Same as default color
+                },
+                '&:focus': {
+                  backgroundColor: '#3f4f22', // Same as default color
+                }
+              }}
             >
               Sign Up
             </Button>
