@@ -46,7 +46,7 @@ export default function Home() {
             justifyContent: 'center',
             alignItems: 'center',
             minHeight: '100vh',
-            flexDirection: 'column'
+            flexDirection: 'row'
         }}>
             <StyledLink href="/pantry">
                 <StyledCard>

@@ -271,7 +271,7 @@ export default function Home() {
             </React.Fragment>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>
-                    <>
+                <>
                     <TextField
                         fullWidth
                         id="item-name"
@@ -284,7 +284,7 @@ export default function Home() {
                     <Button sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}} onClick={handleAddItem}>
                         Add Store
                     </Button>
-                    </>
+                </>
 
             </div>
 
@@ -360,7 +360,7 @@ export default function Home() {
             </CustomCard>
         </div>
 
-        <div>
+        {/* <div> */}
             {storesList.map((item) => (
                 <CustomCard
                     key={item.id}
@@ -404,7 +404,7 @@ export default function Home() {
                     </Box>
                 </CustomCard>
             ))}
-        </div>
+        {/* </div> */}
                     </>
                 )}
             </Box>

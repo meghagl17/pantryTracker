@@ -272,7 +272,7 @@ export default function Home() {
         fontSize: '2rem' // Increase the font size
       }}
     >
-      Shopping List
+        Buy list
     </Typography>
     <ArrowDownwardIcon 
       sx={{ 
