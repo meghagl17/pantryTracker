@@ -281,7 +281,7 @@ export default function Home() {
                     </DialogTitle>
                     <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Since this item is not in your pantry anymore, do you want to add it to your shopping list?
+                        Since this item is not in your pantry anymore, do you want to add it to your shopping list? It will be added to the GENERAL shopping list.
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>

@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Checkbox from '@mui/material/Checkbox';
-import { FormControlLabel } from '@mui/material'
+import { FormControlLabel, IconButton } from '@mui/material'
 
 import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
@@ -26,6 +26,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -34,6 +35,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import { styled } from '@mui/system';
+import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
 
 import { collection, addDoc, getDocs, query, updateDoc, getDoc, doc, deleteDoc} from 'firebase/firestore';
 
@@ -60,6 +62,12 @@ export default function Home() {
 
     const [stores, setStores] = useState([]);
     const [selectedValues, setSelectedValues] = useState({});
+
+    const router = useRouter();  // Initialize useRouter from next/navigation
+
+    const handleReturnToStores = () => {
+        router.push('/stores'); 
+    };
 
     const handleChange = async (event, itemId, itemName) => {
         if (!user) return; 
@@ -300,7 +308,7 @@ export default function Home() {
         textAlign: 'center', 
         textTransform: 'uppercase',
         letterSpacing: '0.1em',
-        fontSize: '2rem' // Increase the font size
+        fontSize: '1.7rem' // Increase the font size
       }}
     >
       Shopping List
@@ -308,10 +316,24 @@ export default function Home() {
     <ArrowDownwardIcon 
       sx={{ 
         color: '#3f4f22', // Match the text color
-        fontSize: '2rem' // Match the font size
+        fontSize: '1.7rem' // Match the font size
       }} 
     />
   </Box> : (null)}
+
+  <IconButton 
+                onClick={handleReturnToStores} 
+                sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}}
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '20px',
+                    zIndex: 1000, // Ensures the button is above other elements
+                }}
+            >
+                <ArrowBackIcon />
+                {/* <ArrowDownwardIcon /> */}
+            </IconButton>
 
             <div style={{
                 display: 'flex',
@@ -326,15 +348,16 @@ export default function Home() {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '20px',
+                    gap: '10px',
                     width: '100%',
                     maxWidth: '600px', // Set a max width to limit the width of the column
                 }}>
                     {shoppingList.map((item) => (
                         <Card key={item.id} sx={{ 
                             width: 300, 
-                            margin: 'auto', 
-                            marginTop: '20px', 
+                            // margin: 'auto', 
+                            marginTop: '10px', 
+                            paddingTop: '2px',
                             boxShadow: '0px 4px 10px rgba(255, 0, 0, 0.5)' // Red shadow
                         }}>
                             <CardContent>
@@ -343,8 +366,8 @@ export default function Home() {
                                 {item.name}
                                 </Typography>
                                 <div>
-                                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                    <InputLabel id={`select-label-${item.id}`}>Age</InputLabel>
+                                <FormControl sx={{ ml: 5, mt: 1, minWidth: 120 }}>
+                                    <InputLabel id={`select-label-${item.id}`}>Store</InputLabel>
                                     <Select
                                     labelId={`select-label-${item.id}`}
                                     id={`select-${item.id}`}
@@ -361,7 +384,7 @@ export default function Home() {
                                         </MenuItem>
                                     ))}
                                     </Select>
-                                    <FormHelperText>With label + helper text</FormHelperText>
+                                    <FormHelperText>Select Store</FormHelperText>
                                 </FormControl>
                                 </div>
                             </Box>

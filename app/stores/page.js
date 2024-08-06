@@ -346,6 +346,7 @@ export default function Home() {
                     >
                         General
                     </Typography>
+                    (Items not assigned to a store yet)
                 </CardContent>
                 <Divider />
                 <Box
@@ -385,7 +386,7 @@ export default function Home() {
                         <IconButton
                             sx={{ 
                                 marginLeft: 'auto', // Pushes icon to the right
-                                color: 'red',
+                                color: '#B22222',
                             }}
                             onClick={() => handleDeleteStore(item.id, item.name)} // Placeholder for delete action
                         >
