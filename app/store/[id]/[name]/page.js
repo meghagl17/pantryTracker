@@ -11,11 +11,11 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Checkbox from '@mui/material/Checkbox';
-import { FormControlLabel } from '@mui/material'
+import { FormControlLabel, IconButton } from '@mui/material'
 
 import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
@@ -31,6 +31,7 @@ import { styled } from '@mui/system';
 
 import { collection, addDoc, getDocs, query, updateDoc, getDoc, doc, deleteDoc} from 'firebase/firestore';
 import { useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -60,8 +61,14 @@ export default function Home() {
 
     const [open, setOpen] = React.useState(false);
 
+    const router = useRouter();  // Initialize useRouter from next/navigation
+
     const handleClickOpen = () => {
         setOpen(true);
+    };
+
+    const handleReturnToStores = () => {
+        router.push('/stores'); 
     };
 
     useEffect(() => {
@@ -87,7 +94,7 @@ export default function Home() {
     const updateInventory = async (itemName) => {
         if (!user) return; 
         const userId = user.uid;
-        const shoppingListCollectionRef = collection(db, 'users', userId, 'store', param.id, 'shoppingList');
+        const shoppingListCollectionRef = collection(db, 'users', userId, 'stores', param.id, 'shoppingList');
         await addDoc(shoppingListCollectionRef, {
             name: itemName,
             addedAt: new Date(),
@@ -110,7 +117,7 @@ export default function Home() {
         setLoading(true);
         if (!user) return;
         const userId = user.uid;
-        const shoppingListCollectionRef = collection(db, 'users', userId, 'store', param.id, 'shoppingList');
+        const shoppingListCollectionRef = collection(db, 'users', userId, 'stores', param.id, 'shoppingList');
         const q = query(shoppingListCollectionRef);
         const querySnapshot = await getDocs(q);
 
@@ -121,8 +128,9 @@ export default function Home() {
 
         setShoppingList(items);
         console.log("shopping List items:", items);
+        console.log('id of store from specific store page: ', param.id);
 
-        const doneCollectionRef = collection(db, 'users', userId, 'store', param.id, 'done');
+        const doneCollectionRef = collection(db, 'users', userId, 'stores', param.id, 'done');
         const q2 = query(doneCollectionRef);
         const querySnapshot2 = await getDocs(q2);
 
@@ -139,13 +147,13 @@ export default function Home() {
     const addToDone = async (itemName, itemId) => {
         if (!user) return; 
         const userId = user.uid;
-        const doneCollectionRef = collection(db, 'users', userId,'store', param.id, 'done');
+        const doneCollectionRef = collection(db, 'users', userId,'stores', param.id, 'done');
         await addDoc(doneCollectionRef, {
             name: itemName,
         });
 
         try {
-            const itemDocRef = doc(db, 'users', userId, 'store', param.id, 'shoppingList', itemId);
+            const itemDocRef = doc(db, 'users', userId, 'stores', param.id, 'shoppingList', itemId);
             await deleteDoc(itemDocRef);
             console.log(`Item ${itemId} deleted successfully`);
           } catch (error) {
@@ -159,10 +167,10 @@ export default function Home() {
     const DeleteDoneItems = async () => {
         if (!user) return; 
         const userId = user.uid;
-        const doneCollectionRef = collection(db, 'users', userId, 'store', param.id, 'done');
+        const doneCollectionRef = collection(db, 'users', userId, 'stores', param.id, 'done');
         const querySnapshot = await getDocs(doneCollectionRef);
         const deletePromises = querySnapshot.docs.map(docSnapshot => {
-            return deleteDoc(doc(db, 'users', userId, 'store', param.id, 'done', docSnapshot.id));
+            return deleteDoc(doc(db, 'users', userId, 'stores', param.id, 'done', docSnapshot.id));
         });
         await Promise.all(deletePromises);
         handleGetItems();
@@ -192,7 +200,7 @@ export default function Home() {
                 </Button>
             </div>
             
-            <div style={{alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>{shoppingList.length === 0 && loading === false ? (
+            <div style={{alignItems: 'center', gap: '10px', marginBottom: '10px', width: '100%', maxWidth: '600px' }}>{shoppingList.length === 0 && loading === false ? (
   <Box 
     sx={{ 
       display: 'flex', 
@@ -246,7 +254,7 @@ export default function Home() {
       alignItems: 'center', 
       justifyContent: 'center', 
       gap: 1, // Space between text and icon
-      margin: '20px 0', // Add margin for spacing
+      margin: '10px 0', // Add margin for spacing
       backgroundColor: '#e8f5e9', // Background color
       padding: '10px', // Padding around the content
       borderRadius: '8px', // Rounded corners
@@ -319,7 +327,7 @@ export default function Home() {
       alignItems: 'center', 
       justifyContent: 'center', 
       gap: 1, // Space between text and icon
-      margin: '20px 0', // Add margin for spacing
+      margin: '10px 0', // Add margin for spacing
       backgroundColor: '#e8f5e9', // Background color
       padding: '10px', // Padding around the content
       borderRadius: '8px', // Rounded corners
@@ -352,7 +360,7 @@ export default function Home() {
                             sx={{ 
                                 width: 300, 
                                 margin: 'auto', 
-                                marginTop: '20px',
+                                marginTop: '10px',
                                 boxShadow: '0px 4px 10px rgba(0, 100, 0, 0.5)'
                             }}
                         >
@@ -367,6 +375,21 @@ export default function Home() {
                     ))}
                 </div>
             </div>
+
+            <IconButton 
+                onClick={handleReturnToStores} 
+                sx={{ backgroundColor: '#3f4f22', '&:hover': {backgroundColor: '#2e3b1a',}, color:'white'}}
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '20px',
+                    zIndex: 1000, // Ensures the button is above other elements
+                }}
+            >
+                <ArrowBackIcon />
+                {/* <ArrowDownwardIcon /> */}
+            </IconButton>
+
             <React.Fragment>
                 <Button
                 variant="contained"

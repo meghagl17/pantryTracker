@@ -65,20 +65,27 @@ export default function Home() {
         if (!user) return; 
         const userId = user.uid;
 
-        const selectedValue = JSON.parse(event.target.value);
+        // const selectedValue = JSON.parse(event.target.value);
+        const selectedStoreId = event.target.value;
 
         setSelectedValues(prevState => ({
           ...prevState,
-          [itemId]: selectedValue
+          [itemId]: itemId
         }));
-        console.log(selectedValue);
+        // console.log(selectedValue);
 
         // delete item from general List
         // add item to selectedValue.id 
-        const storesCollectionRef = collection(db, 'users', userId, 'stores', selectedValue.id);
-        await addDoc(storesCollectionRef, {
-            name: itemName,
-        });
+        try {
+            const storesCollectionRef = collection(db, 'users', userId, 'stores', selectedStoreId, 'shoppingList');
+            console.log('id of store from general shopping list: ', selectedStoreId);
+            await addDoc(storesCollectionRef, {
+                name: itemName,
+            })
+            console.log(`Item ${itemId} ${itemName}was moved to the store successfully`);
+          } catch (error) {
+            console.error('Error adding item to the specific store:', error.message);
+        }
 
         try {
             const generalListDocRef = doc(db, 'users', userId, 'generalList', itemId);
@@ -87,6 +94,7 @@ export default function Home() {
           } catch (error) {
             console.error('Error deleting item:', error.message);
         }
+        handleGetItems();
     };
 
     useEffect(() => {
@@ -348,7 +356,7 @@ export default function Home() {
                                         <em>None</em>
                                     </MenuItem>
                                     {stores.map((store) => (
-                                        <MenuItem key={store.id} value={JSON.stringify({id: store.id, name: store.name})}>
+                                        <MenuItem key={store.id} value={store.id}>
                                         {store.name}
                                         </MenuItem>
                                     ))}

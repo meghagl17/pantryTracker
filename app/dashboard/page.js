@@ -60,7 +60,7 @@ export default function Home() {
             <StyledLink href="/stores">
                 <StyledCard>
                     <CenteredContent>
-                        <Typography variant="h5" sx={{color: '#3f4f22'}}>Shopping List</Typography>
+                        <Typography variant="h5" sx={{color: '#3f4f22'}}>Shopping Lists</Typography>
                         <Typography variant="body2"sx={{color: '#3f4f22'}}>Keep track of your shopping list</Typography>
                     </CenteredContent>
                 </StyledCard>
