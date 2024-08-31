@@ -331,6 +331,8 @@ export default function Home() {
                         placeholder="Search items..."
                         // style={{ marginBottom: '20px' }}
                     />
+
+                    <div>OR</div>
                     {/* <Button variant="contained" onClick={filterPantryItems}>
                         Search Item
                     </Button> */}
@@ -343,6 +345,7 @@ export default function Home() {
                 
                 {clickedRequest.addItem ? (
                     <>
+                    <div>OR</div>
                     <TextField
                         fullWidth
                         id="item-name"

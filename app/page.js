@@ -81,6 +81,9 @@ export default function Home() {
             <Link href="/signup"><Button variant="outlined" sx={{ borderColor: '#3f4f22', color: '#3f4f22', '&:hover': { borderColor: '#2e3b1a', color: '#2e3b1a' } }}>
               Sign Up
             </Button></Link>
+            <Link href="/googleSignIn"><Button variant="outlined" sx={{ borderColor: '#3f4f22', color: '#3f4f22', '&:hover': { borderColor: '#2e3b1a', color: '#2e3b1a' } }}>
+              Google
+            </Button></Link>
           </Box>
         </div>
         {!isMobile ? <Image
