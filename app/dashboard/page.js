@@ -6,6 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
+import ProtectedRoute from '../ProtectedRoute.js';
+
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
     color: '#3f4f22',
@@ -41,6 +43,7 @@ const CenteredContent = styled(CardContent)(({ theme }) => ({
 
 export default function Home() {
     return (
+        <ProtectedRoute>
         <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -66,5 +69,6 @@ export default function Home() {
                 </StyledCard>
             </StyledLink>
         </div>
+        </ProtectedRoute>
     );
 }

@@ -64,18 +64,22 @@ export default function ButtonAppBar() {
             height: '70px', // Set the desired height
             overflow: 'hidden', // Hide overflow to crop
           }}>
-            <Image
-              src={logo}
-              alt="Pantrify Logo"
-              layout="fill" // Use fill layout to cover the container
-              objectFit="cover" // Cover the container while maintaining aspect ratio
-              style={{
-                position: 'absolute', // Absolute positioning within the container
-                top: '50%', // Center vertically
-                left: '50%', // Center horizontally
-                transform: 'translate(-65%, -30%) scale(2)', // Center and zoom in
-              }}
-            />
+            <Link href="/" passHref>
+      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <Image
+          src={logo}
+          alt="Pantrify Logo"
+          layout="fill" // Use fill layout to cover the container
+          objectFit="cover" // Cover the container while maintaining aspect ratio
+          style={{
+            position: 'absolute', // Absolute positioning within the container
+            top: '50%', // Center vertically
+            left: '50%', // Center horizontally
+            transform: 'translate(-65%, -30%) scale(2)', // Center and zoom in
+          }}
+        />
+      </div>
+    </Link>
           </div>
           <Typography 
             variant="h6" 

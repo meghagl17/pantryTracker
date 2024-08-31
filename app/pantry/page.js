@@ -26,6 +26,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { styled } from '@mui/system';
+import ProtectedRoute from '../ProtectedRoute.js';
 
 const CustomCard = styled(Card)(({ theme }) => ({
     backgroundColor: '#ffffe5',
@@ -273,6 +274,7 @@ export default function Home() {
     }
 
     return (
+        <ProtectedRoute>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
             <React.Fragment>
                 <Dialog open={open}>
@@ -490,5 +492,6 @@ export default function Home() {
                     )))}
             </Box>
         </div>
+        </ProtectedRoute>
     );
 }

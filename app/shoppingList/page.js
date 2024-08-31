@@ -39,6 +39,8 @@ import { useRouter } from 'next/navigation';  // Use next/navigation for app dir
 
 import { collection, addDoc, getDocs, query, updateDoc, getDoc, doc, deleteDoc} from 'firebase/firestore';
 
+import ProtectedRoute from '../ProtectedRoute.js';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -223,6 +225,7 @@ export default function Home() {
     };
     
     return (
+        <ProtectedRoute>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', width: '100%', maxWidth: '600px' }}>
                 <TextField
@@ -394,5 +397,6 @@ export default function Home() {
                 </div>
             </div>
         </div>
+        </ProtectedRoute>
     );
 }
