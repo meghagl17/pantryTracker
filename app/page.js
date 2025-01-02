@@ -1,18 +1,27 @@
-"use client"
+'use client';
 
-import Image from "next/image";
-import { useState, useEffect } from "react";
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import pantrifyImage from '../public/pantrifyImage.png';
 import { Button, Typography, Box } from '@mui/material';
-import Link from 'next/link'
+import Link from 'next/link';
+import { auth, db } from '../firebase';
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
+  const [user, setUser] = useState('');
 
   useEffect(() => {
     // Function to update state based on screen width
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1000);
+
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          setUser(user);
+        }
+      });
+      return () => unsubscribe();
     };
 
     // Add event listener
@@ -62,33 +71,85 @@ export default function Home() {
     <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
       <div style={containerStyles}>
         <div style={textSectionStyles}>
-          {isMobile ? <Image
+          {isMobile ? (
+            <Image
+              src={pantrifyImage}
+              alt="Pantrify Logo"
+              style={imageStyles}
+              layout="fixed"
+            />
+          ) : null}
+          <Typography
+            variant="h3"
+            sx={{ color: '#3f4f22', fontWeight: 'bold', marginBottom: '20px' }}
+          >
+            Welcome to Pantrify
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ color: '#333', marginBottom: '20px' }}
+          >
+            Manage your pantry effortlessly and shop with ease. Track your items
+            and never run out of your essentials again!
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '10px',
+              flexDirection: isMobile ? 'column' : 'row',
+            }}
+          >
+            {user == '' ? (
+              <>
+                <Link href="/signin">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: '#3f4f22',
+                      '&:hover': { backgroundColor: '#2e3b1a' },
+                      color: 'white',
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      borderColor: '#3f4f22',
+                      color: '#3f4f22',
+                      '&:hover': { borderColor: '#2e3b1a', color: '#2e3b1a' },
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <Link href="/dashboard">
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#3f4f22',
+                    '&:hover': { backgroundColor: '#2e3b1a' },
+                    color: 'white',
+                  }}
+                >
+                  Home
+                </Button>
+              </Link>
+            )}
+          </Box>
+        </div>
+        {!isMobile ? (
+          <Image
             src={pantrifyImage}
             alt="Pantrify Logo"
             style={imageStyles}
             layout="fixed"
-          /> : (null)}
-          <Typography variant="h3" sx={{ color: '#3f4f22', fontWeight: 'bold', marginBottom: '20px' }}>
-            Welcome to Pantrify
-          </Typography>
-          <Typography variant="body1" sx={{ color: '#333', marginBottom: '20px' }}>
-            Manage your pantry effortlessly and shop with ease. Track your items and never run out of your essentials again!
-          </Typography>
-          <Box sx={{ display: 'flex', gap: '10px', flexDirection: isMobile ? 'column' : 'row' }}>
-            <Link href="/signin"><Button variant="contained" sx={{ backgroundColor: '#3f4f22', '&:hover': { backgroundColor: '#2e3b1a' }, color: 'white' }}>
-              Sign In
-            </Button></Link>
-            <Link href="/signup"><Button variant="outlined" sx={{ borderColor: '#3f4f22', color: '#3f4f22', '&:hover': { borderColor: '#2e3b1a', color: '#2e3b1a' } }}>
-              Sign Up
-            </Button></Link>
-          </Box>
-        </div>
-        {!isMobile ? <Image
-          src={pantrifyImage}
-          alt="Pantrify Logo"
-          style={imageStyles}
-          layout="fixed"
-        /> : (null)}
+          />
+        ) : null}
       </div>
     </div>
   );

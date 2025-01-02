@@ -18,20 +18,22 @@ const ProtectedRoute = ({ children }) => {
   }, [user, loading]);
 
   if (loading) {
-    return <Box 
-    sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh', 
-        width: '100%',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-    }}
->
-    <CircularProgress size={60} sx={{ color: 'white' }} />
-</Box>
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          width: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: 'white' }} />
+      </Box>
+    );
   }
 
   return children;

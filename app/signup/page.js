@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { auth } from '../../firebase';
@@ -16,19 +16,24 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSignUp = async (e) => { // Added e parameter
+  const handleSignUp = async (e) => {
+    // Added e parameter
     e.preventDefault(); // Prevent default form submission
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       console.log('User signed up:', userCredential.user);
-      router.push('/dashboard');  // Redirect to dashboard after sign-in
+      router.push('/dashboard'); // Redirect to dashboard after sign-in
     } catch (error) {
       alert('This email already has an account, please signIn');
       console.error('Error signing up:', error.message);
@@ -38,13 +43,14 @@ export default function SignUp() {
   const handleGoogle = async (e) => {
     const provider = await new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-        .then((result) => {
-            console.log(result);
-            router.push('/dashboard');
-        }).catch((error) => {
-            console.log(error);
-        });
-  }
+      .then((result) => {
+        console.log(result);
+        router.push('/dashboard');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const defaultTheme = createTheme();
 
@@ -68,10 +74,14 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: '#3f4f22' }}>
             {/* Icon can be added here */}
           </Avatar>
-          <Typography component="h1" variant="h5" sx={{ color: '#3f4f22', marginBottom: 2 }}>
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{ color: '#3f4f22', marginBottom: 2 }}
+          >
             Sign Up for Pantrify
           </Typography>
-          
+
           {/* Google Button */}
           <Button
             onClick={handleGoogle}
@@ -88,16 +98,20 @@ export default function SignUp() {
               },
             }}
           >
-            <img
-              src="/Google.png"
-              style={{ width: 20, marginRight: 10 }}
-            />
+            <img src="/Google.png" style={{ width: 20, marginRight: 10 }} />
             Sign Up with Google
           </Button>
-          
-          <Typography component="p" sx={{ color: '#666' }}>OR</Typography>
-  
-          <Box component="form" onSubmit={handleSignUp} noValidate sx={{ mt: 1 }}>
+
+          <Typography component="p" sx={{ color: '#666' }}>
+            OR
+          </Typography>
+
+          <Box
+            component="form"
+            onSubmit={handleSignUp}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required

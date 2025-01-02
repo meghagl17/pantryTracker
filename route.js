@@ -1,4 +1,4 @@
-import { connect } from '../read-talk/src/lib/db'
+import { connect } from '../read-talk/src/lib/db';
 import Question from '../read-talk/src/lib/modals/question.modal';
 // import User from '../../models/User';
 
@@ -9,7 +9,7 @@ export async function POST(req, res) {
     const { bookId, question, userId } = req.body;
 
     try {
-    //   const user = await User.findById(userId);
+      //   const user = await User.findById(userId);
 
       const newQuestion = new Question({
         googleBookId,
